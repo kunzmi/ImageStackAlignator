@@ -151,13 +151,13 @@ namespace PEFStudioDX
              */
         }
 
-        public float RunSafe(CudaDeviceVariable<ushort> dataIn, NPPImage_32fC3 imgOut, NPPImage_32fC3 totalWeights, NPPImage_32fC4 certaintyMask, NPPImage_32fC3 kernelParam, NPPImage_32fC2 shifts, float maxVal)
+        public float RunSafe(CudaDeviceVariable<ushort> dataIn, NPPImage_32fC3 imgOut, NPPImage_32fC3 totalWeights, NPPImage_32fC4 certaintyMask, NPPImage_32fC3 kernelParam, NPPImage_32fC2 shifts, float3 whiteLevel, float3 blackLevel)
         {
             SetComputeSize((uint)imgOut.WidthRoi, (uint)imgOut.HeightRoi);
 
             return base.Run(dataIn.DevicePointer, imgOut.DevicePointerRoi, totalWeights.DevicePointerRoi,
                 certaintyMask.DevicePointerRoi, kernelParam.DevicePointerRoi, shifts.DevicePointerRoi,
-                maxVal, imgOut.WidthRoi, imgOut.HeightRoi, imgOut.Pitch, certaintyMask.Pitch, shifts.Pitch);
+                whiteLevel, blackLevel, imgOut.WidthRoi, imgOut.HeightRoi, imgOut.Pitch, certaintyMask.Pitch, shifts.Pitch);
         }
 
         public PentaxPefFile.RawFile.BayerColor[] BayerPattern
@@ -194,7 +194,7 @@ namespace PEFStudioDX
              */
         }
 
-        public float RunSafe(CudaDeviceVariable<ushort> dataIn, NPPImage_32fC3 imgOut, NPPImage_32fC3 totalWeights, NPPImage_32fC4 certaintyMask, NPPImage_32fC4 kernelParam, NPPImage_32fC2 shifts, float maxVal)
+        public float RunSafe(CudaDeviceVariable<ushort> dataIn, NPPImage_32fC3 imgOut, NPPImage_32fC3 totalWeights, NPPImage_32fC4 certaintyMask, NPPImage_32fC4 kernelParam, NPPImage_32fC2 shifts, float3 whiteLevel, float3 blackLevel)
         {
             SetComputeSize((uint)imgOut.WidthRoi, (uint)imgOut.HeightRoi);
 
@@ -208,7 +208,7 @@ namespace PEFStudioDX
 
             float t = base.Run(dataIn.DevicePointer, imgOut.DevicePointerRoi, totalWeights.DevicePointerRoi,
                 certaintyMask.DevicePointerRoi, texKernel.TexObject, texShift.TexObject,
-                maxVal, imgOut.WidthRoi, imgOut.HeightRoi, imgOut.Pitch, certaintyMask.Pitch, kernelParam.Pitch, shifts.Pitch);
+                whiteLevel, blackLevel, imgOut.WidthRoi, imgOut.HeightRoi, imgOut.Pitch, certaintyMask.Pitch, kernelParam.Pitch, shifts.Pitch);
 
             texShift.Dispose();
             texKernel.Dispose();

@@ -294,7 +294,7 @@ __global__ void accumulateImages(
 	const float4 * __restrict__ certaintyMask,
 	const float3* __restrict__ kernelParam,
 	const float2* __restrict__ shifts,
-	float maxVal, int dimX, int dimY, int strideOut, int strideMask, int strideShift)
+	float3 whiteLevel, float3 blackLevel, int dimX, int dimY, int strideOut, int strideMask, int strideShift)
 {
 	int x = blockIdx.x * blockDim.x + threadIdx.x;
 	int y = blockIdx.y * blockDim.y + threadIdx.y;
@@ -312,7 +312,7 @@ __global__ void accumulateImages(
 	int sx = shift.x;
 	int sy = shift.y;
 
-	float factor = 1.0f / maxVal;
+	//float factor = 1.0f / maxVal;
 
 	for (int py = -2; py <= 2; py++)
 	{
@@ -337,10 +337,11 @@ __global__ void accumulateImages(
 			if (!isfinite(w))
 				w = px*py == 0 ? 1 : 0;
 
-			float raw = RAW(ppsx, ppsy) * factor;
+			float raw = RAW(ppsx, ppsy);
 
 			if (thisPixel == Green)
 			{
+				raw = (raw - blackLevel.y) / whiteLevel.y;
 				float certainty = (((const float4*)((const char*)certaintyMask + (ppy / 2) * strideMask)) + (ppx / 2))->y;
 				if (!isfinite(certainty))
 					certainty = 0;
@@ -350,6 +351,7 @@ __global__ void accumulateImages(
 			else
 				if (thisPixel == Red)
 				{
+					raw = (raw - blackLevel.x) / whiteLevel.x;
 					float certainty = (((const float4*)((const char*)certaintyMask + (ppy / 2) * strideMask)) + (ppx / 2))->x;
 					if (!isfinite(certainty))
 						certainty = 0;
@@ -359,6 +361,7 @@ __global__ void accumulateImages(
 				else
 					if (thisPixel == Blue)
 					{
+						raw = (raw - blackLevel.z) / whiteLevel.z;
 						float certainty = (((const float4*)((const char*)certaintyMask + (ppy / 2) * strideMask)) + (ppx / 2))->z;
 						if (!isfinite(certainty))
 							certainty = 0;
@@ -380,7 +383,7 @@ __global__ void accumulateImagesSuperRes(
 	const float4 * __restrict__ certaintyMask,
 	cudaTextureObject_t kernelParam,
 	cudaTextureObject_t shifts,
-	float maxVal, int dimX, int dimY, int strideOut, int strideMask, int strideKernelParam, int strideShift)
+	float3 whiteLevel, float3 blackLevel, int dimX, int dimY, int strideOut, int strideMask, int strideKernelParam, int strideShift)
 {
 	int x = blockIdx.x * blockDim.x + threadIdx.x;
 	int y = blockIdx.y * blockDim.y + threadIdx.y;
@@ -402,7 +405,7 @@ __global__ void accumulateImagesSuperRes(
 	int sx = shift.x;
 	int sy = shift.y;
 
-	float factor = 1.0f / maxVal;
+	//float factor = 1.0f / maxVal;
 
 	for (int py = -2; py <= 2; py++)
 	{
@@ -426,10 +429,11 @@ __global__ void accumulateImagesSuperRes(
 			if (!isfinite(w))
 				w = px * py == 0 ? 1 : 0;
 
-			float raw = RAW(ppsx, ppsy) * factor;
+			float raw = RAW(ppsx, ppsy);
 
 			if (thisPixel == Green)
 			{
+				raw = (raw - blackLevel.y) / whiteLevel.y;
 				float certainty = (((const float4*)((const char*)certaintyMask + (ppy / 2) * strideMask)) + (ppx / 2))->y;
 				if (!isfinite(certainty))
 					certainty = 0;
@@ -439,6 +443,7 @@ __global__ void accumulateImagesSuperRes(
 			else
 				if (thisPixel == Red)
 				{
+					raw = (raw - blackLevel.x) / whiteLevel.x;
 					float certainty = (((const float4*)((const char*)certaintyMask + (ppy / 2) * strideMask)) + (ppx / 2))->x;
 					if (!isfinite(certainty))
 						certainty = 0;
@@ -448,6 +453,7 @@ __global__ void accumulateImagesSuperRes(
 				else
 					if (thisPixel == Blue)
 					{
+						raw = (raw - blackLevel.z) / whiteLevel.z;
 						float certainty = (((const float4*)((const char*)certaintyMask + (ppy / 2) * strideMask)) + (ppx / 2))->z;
 						if (!isfinite(certainty))
 							certainty = 0;

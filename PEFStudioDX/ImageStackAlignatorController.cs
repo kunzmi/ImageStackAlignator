@@ -1869,11 +1869,13 @@ namespace PEFStudioDX
                 _structureTensor.Dispose();
             }
 
-            float[] blackLevel = _pefFiles[refImage].BlackLevel;
+            float3 blackLevel = new float3(_pefFiles[refImage].BlackLevel[0], _pefFiles[refImage].BlackLevel[1], _pefFiles[refImage].BlackLevel[2]);
+            float3 whiteLevel = new float3(_pefFiles[refImage].WhiteLevel[0], _pefFiles[refImage].WhiteLevel[1], _pefFiles[refImage].WhiteLevel[2]);
+            //float[] blackLevel = _pefFiles[refImage].BlackLevel;
             float[] maxLevel = _pefFiles[refImage].WhiteLevel;
-            maxLevel[0] += blackLevel[0];
-            maxLevel[1] += blackLevel[1];
-            maxLevel[2] += blackLevel[2];
+            maxLevel[0] += blackLevel.x;
+            maxLevel[1] += blackLevel.y;
+            maxLevel[2] += blackLevel.z;
             float maxValue = maxLevel.Max();
 
             _rawImageNoPitch.CopyToDevice(_pefFiles[refImage].RawImage);
@@ -1885,12 +1887,12 @@ namespace PEFStudioDX
 
             if (SuperResolution)
             {
-                accumulateImagesSuperRes.RunSafe(_rawImageNoPitch, _finalImage, _totalWeight, _uncertaintyMask, _structureTensor4, zeroShift, maxValue);
+                accumulateImagesSuperRes.RunSafe(_rawImageNoPitch, _finalImage, _totalWeight, _uncertaintyMask, _structureTensor4, zeroShift, whiteLevel, blackLevel);
                 _ctx.Synchronize();
             }
             else
             {
-                accumulateImages.RunSafe(_rawImageNoPitch, _finalImage, _totalWeight, _uncertaintyMask, _structureTensor, zeroShift, maxValue);
+                accumulateImages.RunSafe(_rawImageNoPitch, _finalImage, _totalWeight, _uncertaintyMask, _structureTensor, zeroShift, whiteLevel, blackLevel);
             }
 
             zeroShift.Dispose();
@@ -1941,11 +1943,13 @@ namespace PEFStudioDX
                 _totalWeight.Set(new float[] { 0, 0, 0 });
                 _finalImage.Set(new float[] { 0, 0, 0 });
             }
-            float[] blackLevel = _pefFiles[refImage].BlackLevel;
+            //float[] blackLevel = _pefFiles[refImage].BlackLevel;
+            float3 blackLevel = new float3(_pefFiles[refImage].BlackLevel[0], _pefFiles[refImage].BlackLevel[1], _pefFiles[refImage].BlackLevel[2]);
+            float3 whiteLevel = new float3(_pefFiles[refImage].WhiteLevel[0], _pefFiles[refImage].WhiteLevel[1], _pefFiles[refImage].WhiteLevel[2]);
             float[] maxLevel = _pefFiles[refImage].WhiteLevel;
-            maxLevel[0] += blackLevel[0];
-            maxLevel[1] += blackLevel[1];
-            maxLevel[2] += blackLevel[2];
+            maxLevel[0] += blackLevel.x;
+            maxLevel[1] += blackLevel.y;
+            maxLevel[2] += blackLevel.z;
             float maxValue = maxLevel.Max();
 
             for (int i = 0; i < _pefFiles.Count; i++)
@@ -1967,11 +1971,11 @@ namespace PEFStudioDX
 
                     if (SuperResolution)
                     {
-                        accumulateImagesSuperRes.RunSafe(_rawImageNoPitch, _finalImage, _totalWeight, _uncertaintyMaskEroded, _structureTensor4, of.LastFlow, maxValue);
+                        accumulateImagesSuperRes.RunSafe(_rawImageNoPitch, _finalImage, _totalWeight, _uncertaintyMaskEroded, _structureTensor4, of.LastFlow, whiteLevel, blackLevel);
                     }
                     else
                     {
-                        accumulateImages.RunSafe(_rawImageNoPitch, _finalImage, _totalWeight, _uncertaintyMaskEroded, _structureTensor, of.LastFlow, maxValue);
+                        accumulateImages.RunSafe(_rawImageNoPitch, _finalImage, _totalWeight, _uncertaintyMaskEroded, _structureTensor, of.LastFlow, whiteLevel, blackLevel);
                     }
                 }
             }
@@ -1988,9 +1992,6 @@ namespace PEFStudioDX
                     else
                     {
                         DeBayerFullRes(refImage);
-                        float3 whitePoint = new float3(_pefFiles[0].WhiteLevel[0], _pefFiles[0].WhiteLevel[1], _pefFiles[0].WhiteLevel[2]);
-                        float3 blackPoint = new float3(_pefFiles[0].BlackLevel[0], _pefFiles[0].BlackLevel[1], _pefFiles[0].BlackLevel[2]);
-                        
                         applyWeightingKernel.RunSafe(_decodedImage, _finalImage, _totalWeight, 1);
                     }
                     
