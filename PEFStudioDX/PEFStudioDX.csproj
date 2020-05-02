@@ -37,17 +37,17 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="CudaBlas, Version=10.0.31.0, Culture=neutral, PublicKeyToken=539d54d12e99fedb, processorArchitecture=AMD64">
-      <HintPath>..\packages\ManagedCuda-CUBLAS.10.0.31\lib\net46\CudaBlas.dll</HintPath>
+    <Reference Include="CudaBlas, Version=10.2.41.0, Culture=neutral, PublicKeyToken=539d54d12e99fedb, processorArchitecture=AMD64">
+      <HintPath>..\packages\ManagedCuda-CUBLAS.10.2.41\lib\net40\CudaBlas.dll</HintPath>
     </Reference>
-    <Reference Include="CudaFFT, Version=10.0.31.0, Culture=neutral, PublicKeyToken=f066edfa1acb2f23, processorArchitecture=AMD64">
-      <HintPath>..\packages\ManagedCuda-CUFFT.10.0.31\lib\net46\CudaFFT.dll</HintPath>
+    <Reference Include="CudaFFT, Version=10.2.41.0, Culture=neutral, PublicKeyToken=f066edfa1acb2f23, processorArchitecture=AMD64">
+      <HintPath>..\packages\ManagedCuda-CUFFT.10.2.41\lib\net40\CudaFFT.dll</HintPath>
     </Reference>
-    <Reference Include="ManagedCuda, Version=10.0.31.0, Culture=neutral, PublicKeyToken=242d898828717aa0, processorArchitecture=MSIL">
-      <HintPath>..\packages\ManagedCuda-100.10.0.31\lib\net46\ManagedCuda.dll</HintPath>
+    <Reference Include="ManagedCuda, Version=10.2.41.0, Culture=neutral, PublicKeyToken=242d898828717aa0, processorArchitecture=MSIL">
+      <HintPath>..\packages\ManagedCuda-102.10.2.41\lib\net40\ManagedCuda.dll</HintPath>
     </Reference>
-    <Reference Include="NPP, Version=10.0.31.0, Culture=neutral, processorArchitecture=AMD64">
-      <HintPath>..\packages\ManagedCuda-NPP.10.0.31\lib\net46\NPP.dll</HintPath>
+    <Reference Include="NPP, Version=10.2.41.0, Culture=neutral, processorArchitecture=AMD64">
+      <HintPath>..\packages\ManagedCuda-NPP.10.2.41\lib\net40\NPP.dll</HintPath>
     </Reference>
     <Reference Include="SlimDX">
       <HintPath>.\SlimDX.dll</HintPath>

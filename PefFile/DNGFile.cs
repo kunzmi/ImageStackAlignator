@@ -302,8 +302,11 @@ namespace PentaxPefFile
 
                 ExtraCameraProfile profile = profiles.GetProfile(make, uniqueModel);
 
-                double a, b;
-                (a, b) = profile.NoiseModel.GetValue(mISO);
+                double a = 0, b = 0;
+                if (profile != null)
+                {
+                    (a, b) = profile.NoiseModel.GetValue(mISO);
+                }
 
                 if (a != 0.0)
                 {

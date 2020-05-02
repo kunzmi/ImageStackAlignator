@@ -1000,6 +1000,11 @@ namespace PEFStudioDX
             if (_ctx != null)
                 return; //ignore...
 
+            if (ctx == null)
+            {
+                throw new ArgumentException("Provided Cuda context may not be NULL. This happens when running CUDA and DirectX on two seperate GPUs.");
+            }
+
             _ctx = ctx;
             CUmodule modDebayer = _ctx.LoadModulePTX("DeBayerKernels.ptx");
             deBayerGreenKernel = new DeBayerGreenKernel(modDebayer, _ctx);
@@ -1670,6 +1675,7 @@ namespace PEFStudioDX
                 {
                     Console.WriteLine(_preAlignmentStore.GetShift(f));
                 }
+
 
                 foreach (var item in _shiftCollection.GetShiftPairs())
                 {
